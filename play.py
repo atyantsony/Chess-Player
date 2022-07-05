@@ -46,23 +46,31 @@ def mov(initial, destination):
     sleep(7+randint(0,7))
     pg.click(button='left', x=destination[0], y=destination[1])
 
+
 def recognize(piece, dest, init_file = None):
+    print(piece,"\t",dest)
+    if init_file != None: print("init_file: ", init_file)
     turn = "black_"
     if (white_turn): turn = "white_"
     screenshot = pg.screenshot()
     screenshot = cv.cvtColor(np.array(screenshot), cv.COLOR_RGB2BGR)
-    conf = 0.85
+    conf = 0.8
     if piece == "pawn" and not(white_turn): conf = 0.95
     color1 = (174,177,135,255)
     color2 = (133,121,79,255)
     color3 = (171,163,58,255)
     color4 = (133,121,79,255)
     for p in pg.locateAllOnScreen("graphics/"+turn+str(piece)+".png", confidence = conf):
-        if init_file != None:
+        if (init_file != None):
             if white_turn and not (p.left <= white_coordinates[init_file + str(1)][0] <= p.left+p.width):
                 sleep(5+randint(0,5))
                 continue
-            if (not white_turn )and (not (p.left <= black_coordinates[init_file + str(1)][0] <= p.left+p.width)):
+            if (not white_turn) and (not (p.left <= black_coordinates[init_file + str(1)][0] <= p.left+p.width)):
+                sleep(5+randint(0,5))
+                continue
+
+        if (piece == "pawn" and init_file == None):
+            if not (p.left <= dest[0] <= p.left+p.width):
                 sleep(5+randint(0,5))
                 continue
 
@@ -80,6 +88,7 @@ def recognize(piece, dest, init_file = None):
 
 
 def read_step(step):
+    print(step)
     piece = "pawn"
     dest_file = ""
     dest_row = ""
