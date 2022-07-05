@@ -29,12 +29,12 @@ def init():
             init_y += (cell_size + 2)
         init_x += (cell_size + 2)
     
-    black_board = pg.locateOnScreen("graphics/black_board.png")
+    black_board = pg.locateOnScreen("graphics/black_board2.png")
     init_x = black_board.left + (cell_size/2)
     init_y = black_board.top + (cell_size/2)
-    for alp in range (97, 105):
+    for alp in range (104,96,-1):
         init_y = black_board.top + (cell_size/2)
-        for num in range(8,0,-1):
+        for num in range(1,9):
             key = chr(alp) + str(num)
             val = (init_x, init_y)
             black_coordinates[key] = val
@@ -43,13 +43,11 @@ def init():
 
 def mov(initial, destination):
     pg.click(button='left', x=initial[0], y=initial[1])
-    sleep(7+randint(0,7))
+    # sleep(7+randint(0,7))
     pg.click(button='left', x=destination[0], y=destination[1])
 
 
 def recognize(piece, dest, init_file = None):
-    print(piece,"\t",dest)
-    if init_file != None: print("init_file: ", init_file)
     turn = "black_"
     if (white_turn): turn = "white_"
     screenshot = pg.screenshot()
@@ -63,21 +61,21 @@ def recognize(piece, dest, init_file = None):
     for p in pg.locateAllOnScreen("graphics/"+turn+str(piece)+".png", confidence = conf):
         if (init_file != None):
             if white_turn and not (p.left <= white_coordinates[init_file + str(1)][0] <= p.left+p.width):
-                sleep(5+randint(0,5))
+                # sleep(5+randint(0,5))
                 continue
             if (not white_turn) and (not (p.left <= black_coordinates[init_file + str(1)][0] <= p.left+p.width)):
-                sleep(5+randint(0,5))
+                # sleep(5+randint(0,5))
                 continue
 
         if (piece == "pawn" and init_file == None):
             if not (p.left <= dest[0] <= p.left+p.width):
-                sleep(5+randint(0,5))
+                # sleep(5+randint(0,5))
                 continue
 
         pg.click(button="left", x=p.left+(p.width/2), y=p.top+(p.height/2))
 
-        pg.moveTo(dest[0], dest[1], duration=5)
-        sleep(10+randint(0,10))
+        pg.moveTo(dest[0], dest[1], duration=3)
+        # sleep(10+randint(0,10))
         
         if pg.pixelMatchesColor(dest[0],dest[1],color1,10) or pg.pixelMatchesColor(dest[0],dest[1],color2,10) or pg.pixelMatchesColor(dest[0],dest[1],color3,10) or pg.pixelMatchesColor(dest[0],dest[1],color4,10):
             pg.click()
@@ -88,7 +86,6 @@ def recognize(piece, dest, init_file = None):
 
 
 def read_step(step):
-    print(step)
     piece = "pawn"
     dest_file = ""
     dest_row = ""
@@ -173,10 +170,10 @@ for row in all_steps:
         read_step(step)
         white_turn = not white_turn
         sign = randint(0,1)
-        if (sign == 0):
-            sleep(90+randint(0,30))
-        else:
-            sleep(90-randint(0,30))
+        # if (sign == 0):
+        #     sleep(90+randint(0,30))
+        # else:
+        #     sleep(90-randint(0,30))
 
 screensht = pg.screenshot()
 screensht = cv.cvtColor(np.array(screensht), cv.COLOR_RGB2BGR)
