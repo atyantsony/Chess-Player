@@ -29,7 +29,7 @@ def init():
             init_y += (cell_size + 2)
         init_x += (cell_size + 2)
     
-    black_board = pg.locateOnScreen("graphics/black_board2.png")
+    black_board = pg.locateOnScreen("graphics/black_board.png")
     init_x = black_board.left + (cell_size/2)
     init_y = black_board.top + (cell_size/2)
     for alp in range (104,96,-1):
@@ -47,7 +47,7 @@ def mov(initial, destination):
     pg.click(button='left', x=destination[0], y=destination[1])
 
 
-def recognize(piece, dest, init_file = None):
+def recognize(piece, dest, init_file = None, init_row = None):
     turn = "black_"
     if (white_turn): turn = "white_"
     screenshot = pg.screenshot()
@@ -72,9 +72,17 @@ def recognize(piece, dest, init_file = None):
                 # sleep(5+randint(0,5))
                 continue
 
+        if (init_row != None):
+            if white_turn and not (p.top <= white_coordinates[init_row + str(1)][1] <= p.top+p.height):
+                # sleep(5+randint(0,5))
+                continue
+            if (not white_turn) and (not (p.top <= black_coordinates[init_row + str(1)][1] <= p.top+p.height)):
+                # sleep(5+randint(0,5))
+                continue
+
         pg.click(button="left", x=p.left+(p.width/2), y=p.top+(p.height/2))
 
-        pg.moveTo(dest[0], dest[1], duration=3)
+        pg.moveTo(dest[0], dest[1], duration=1)
         # sleep(10+randint(0,10))
         
         if pg.pixelMatchesColor(dest[0],dest[1],color1,10) or pg.pixelMatchesColor(dest[0],dest[1],color2,10) or pg.pixelMatchesColor(dest[0],dest[1],color3,10) or pg.pixelMatchesColor(dest[0],dest[1],color4,10):
@@ -115,16 +123,21 @@ def read_step(step):
         return
 
     init_file = None
-    first = True
+    init_row = None
+    first_file = True
+    first_num = True
     for chr in step:
         if isupper(chr):
             piece = chr
         if chr >= 'a' and chr <= 'h':
-            if first:
+            if first_file:
                 init_file = chr
-                first = False
+                first_file = False
             dest_file = chr
         if chr >= '1' and chr <= '8':
+            if first_num:
+                init_row = chr
+                first_num = False
             dest_row = chr
 
     dest = None
@@ -132,7 +145,9 @@ def read_step(step):
     else: dest = black_coordinates[dest_file + dest_row]
 
     if (init_file != None and init_file != dest_file):
-        recognize(piece, dest, init_file)
+        recognize(piece, dest, init_file = init_file)
+    elif(init_row != None and init_row != dest_row):
+        recognize(piece, dest, init_row = init_row)
     else:
         recognize(piece, dest)
 
