@@ -56,4 +56,5 @@ pip install pyautogui opencv-python numpy
 # Limitations & Bugs
 1. Due to some limitations of OpenCV and Pyautogui, the chess pieces and the size of the chess board should exactly be the same as that of the ones stored in the 'graphics' folder.
 2. The bot skips some steps sometimes which completely changes the course of the match
+3. The bot fails in case of Pawn Promotion
 
